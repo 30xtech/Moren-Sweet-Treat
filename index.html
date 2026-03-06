@@ -6,7 +6,6 @@
   <meta name="theme-color" content="#F47C20"/>
   <title>Moren Sweet Treat</title>
 
-  <!-- Fonts loaded async — never blocks first paint -->
   <link rel="preconnect" href="https://fonts.googleapis.com" crossorigin/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
   <link rel="preload" as="style"
@@ -18,7 +17,6 @@
   </noscript>
 
   <style>
-    /* ── RESET ── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
@@ -28,14 +26,14 @@
       --warm-white:  #FFFAF5;
       --maroon:      #7A1B2A;
       --gold:        #E8B84B;
+      --whatsapp:    #25D366;
+      --whatsapp-dk: #1aab52;
       --text:        #2D1A0E;
-      /* System stack renders instantly; web fonts swap in */
       --font-body:    'Nunito', 'Segoe UI', Arial, sans-serif;
       --font-display: 'Playfair Display', Georgia, serif;
     }
 
     html { scroll-behavior: smooth; }
-
     body {
       font-family: var(--font-body);
       background: var(--warm-white);
@@ -51,18 +49,17 @@
       -webkit-backdrop-filter: blur(10px);
       border-bottom: 2px solid var(--orange);
       display: flex; justify-content: space-between; align-items: center;
-      padding: 12px 5vw;
-      min-height: 62px;
+      padding: 12px 5vw; min-height: 62px;
     }
     .nav-logo {
       font-family: var(--font-display);
-      font-size: clamp(1.1rem, 3vw, 1.5rem);
-      font-weight: 900; color: var(--maroon);
-      letter-spacing: 1px; white-space: nowrap;
+      font-size: clamp(0.95rem, 2.5vw, 1.35rem);
+      font-weight: 900; color: var(--maroon); letter-spacing: 0.5px;
+      white-space: nowrap; line-height: 1.2;
     }
-    .nav-logo span { color: var(--orange); }
+    .nav-logo .logo-line1 { display: block; font-size: 0.65em; letter-spacing: 3px; color: var(--orange); text-transform: uppercase; }
+    .nav-logo .logo-sweet { color: var(--orange); }
 
-    /* Desktop links */
     .nav-links { display: flex; gap: clamp(14px, 3vw, 28px); list-style: none; }
     .nav-links a {
       text-decoration: none; color: var(--maroon);
@@ -76,7 +73,6 @@
     .nav-links a:hover { color: var(--orange); }
     .nav-links a:hover::after { width: 100%; }
 
-    /* Hamburger */
     .hamburger {
       display: none; flex-direction: column; justify-content: space-between;
       width: 26px; height: 20px; cursor: pointer;
@@ -87,28 +83,48 @@
       background: var(--maroon); transition: all 0.3s;
     }
     .hamburger.open span:nth-child(1) { transform: translateY(8.5px) rotate(45deg); }
-    .hamburger.open span:nth-child(2) { opacity: 0; transform: scaleX(0); }
+    .hamburger.open span:nth-child(2) { opacity: 0; }
     .hamburger.open span:nth-child(3) { transform: translateY(-8.5px) rotate(-45deg); }
 
-    /* Mobile drawer */
     .mobile-menu {
       display: none; position: fixed;
       top: 62px; left: 0; right: 0;
       background: var(--cream); z-index: 199;
-      padding: 20px 6vw 28px;
+      padding: 8px 6vw 20px;
       border-bottom: 2px solid var(--orange);
-      flex-direction: column; gap: 0;
+      flex-direction: column;
       box-shadow: 0 12px 30px rgba(0,0,0,0.12);
     }
     .mobile-menu.open { display: flex; }
     .mobile-menu a {
       text-decoration: none; color: var(--maroon);
       font-weight: 800; font-size: 1.05rem;
-      padding: 14px 0;
+      padding: 13px 0;
       border-bottom: 1px solid rgba(244,124,32,0.18);
       display: flex; align-items: center; gap: 10px;
     }
     .mobile-menu a:last-child { border-bottom: none; }
+
+    /* ── FLOATING WHATSAPP ── */
+    .wa-float {
+      position: fixed; bottom: 22px; right: 22px; z-index: 300;
+      background: var(--whatsapp); color: #fff;
+      width: 58px; height: 58px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.7rem; text-decoration: none;
+      box-shadow: 0 6px 24px rgba(37,211,102,0.5);
+      transition: transform 0.2s, box-shadow 0.2s;
+      animation: waBounce 2s ease-in-out infinite;
+    }
+    .wa-float:hover {
+      transform: scale(1.12);
+      box-shadow: 0 10px 32px rgba(37,211,102,0.65);
+      animation: none;
+    }
+    @keyframes waBounce {
+      0%,100% { transform: translateY(0); }
+      50%      { transform: translateY(-6px); }
+    }
 
     /* ── HERO ── */
     .hero {
@@ -140,11 +156,9 @@
       from { opacity:0; transform: translateY(22px); }
       to   { opacity:1; transform: none; }
     }
-
     .hero-badge {
       display: inline-block; background: var(--maroon); color: #fff;
-      font-size: clamp(0.6rem, 1.8vw, 0.72rem);
-      font-weight: 800; letter-spacing: 3px;
+      font-size: clamp(0.6rem, 1.8vw, 0.72rem); font-weight: 800; letter-spacing: 3px;
       padding: 5px 16px; border-radius: 30px; margin-bottom: 16px;
       animation: fadeUp 0.7s 0.1s ease both;
     }
@@ -157,8 +171,7 @@
     .hero h1 span { color: var(--orange); display: block; }
     .hero-tagline {
       font-size: clamp(0.88rem, 2.5vw, 1.1rem);
-      color: #7A5030; font-style: italic;
-      margin: 16px 0 30px;
+      color: #7A5030; font-style: italic; margin: 16px 0 30px;
       animation: fadeUp 0.7s 0.3s ease both;
     }
     .hero-cta {
@@ -168,23 +181,20 @@
 
     /* ── BUTTONS ── */
     .btn {
-      display: inline-block; text-decoration: none;
+      display: inline-flex; align-items: center; gap: 8px;
+      text-decoration: none;
       padding: clamp(11px, 2vw, 14px) clamp(22px, 4vw, 34px);
       border-radius: 50px; font-family: var(--font-body);
       font-weight: 800; font-size: clamp(0.85rem, 2.2vw, 0.95rem);
       transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
       cursor: pointer; border: none; white-space: nowrap;
     }
-    .btn-primary {
-      background: var(--orange); color: #fff;
-      box-shadow: 0 6px 24px rgba(244,124,32,0.4);
-    }
+    .btn-primary { background: var(--orange); color: #fff; box-shadow: 0 6px 24px rgba(244,124,32,0.4); }
     .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 10px 32px rgba(244,124,32,0.5); }
-    .btn-outline {
-      background: transparent; color: var(--maroon);
-      border: 2px solid var(--maroon);
-    }
+    .btn-outline { background: transparent; color: var(--maroon); border: 2px solid var(--maroon); }
     .btn-outline:hover { background: var(--maroon); color: #fff; transform: translateY(-3px); }
+    .btn-wa { background: var(--whatsapp); color: #fff; box-shadow: 0 6px 24px rgba(37,211,102,0.4); }
+    .btn-wa:hover { background: var(--whatsapp-dk); transform: translateY(-3px); box-shadow: 0 10px 32px rgba(37,211,102,0.5); }
 
     /* ── SECTIONS ── */
     section { padding: clamp(56px, 10vw, 90px) 5vw; }
@@ -196,8 +206,7 @@
     .section-title {
       text-align: center; font-family: var(--font-display);
       font-size: clamp(1.6rem, 5vw, 3rem);
-      color: var(--maroon); margin-bottom: clamp(28px, 6vw, 50px);
-      line-height: 1.2;
+      color: var(--maroon); margin-bottom: clamp(28px, 6vw, 50px); line-height: 1.2;
     }
 
     /* ── PRODUCTS ── */
@@ -205,37 +214,51 @@
     .products-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(170px, 45%), 1fr));
-      gap: clamp(12px, 2.5vw, 24px);
-      max-width: 1000px; margin: 0 auto;
+      gap: clamp(12px, 2.5vw, 24px); max-width: 1000px; margin: 0 auto;
     }
     .product-card {
       background: #fff; border-radius: 20px;
       padding: clamp(18px, 3.5vw, 32px) clamp(12px, 2.5vw, 20px) clamp(14px, 3vw, 24px);
       text-align: center;
       box-shadow: 0 4px 20px rgba(122,27,42,0.07);
-      transition: transform 0.25s, box-shadow 0.25s;
+      transition: transform 0.25s, box-shadow 0.25s, border-color 0.2s;
       position: relative; overflow: hidden;
+      border: 2px solid transparent; cursor: pointer;
     }
     .product-card::before {
       content: ''; position: absolute; top: 0; left: 0; right: 0; height: 4px;
       background: linear-gradient(90deg, var(--orange), var(--gold));
     }
     .product-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(244,124,32,0.2); }
+    .product-card.selected {
+      border-color: var(--whatsapp);
+      box-shadow: 0 0 0 3px rgba(37,211,102,0.25), 0 8px 28px rgba(37,211,102,0.2);
+    }
+    .product-card.selected::after {
+      content: '✓';
+      position: absolute; top: 10px; right: 12px;
+      background: var(--whatsapp); color: #fff;
+      width: 22px; height: 22px; border-radius: 50%;
+      font-size: 0.75rem; font-weight: 900;
+      display: flex; align-items: center; justify-content: center;
+    }
     .product-icon { font-size: clamp(1.8rem, 4.5vw, 2.6rem); margin-bottom: 10px; display: block; }
     .product-name {
       font-family: var(--font-display);
-      font-size: clamp(0.9rem, 2.2vw, 1.1rem);
-      color: var(--maroon); font-weight: 700;
+      font-size: clamp(0.9rem, 2.2vw, 1.1rem); color: var(--maroon); font-weight: 700;
     }
     .product-desc { font-size: clamp(0.72rem, 1.6vw, 0.82rem); color: #9A6040; margin-top: 6px; line-height: 1.5; }
+    .select-hint {
+      text-align: center; font-size: clamp(0.78rem, 1.8vw, 0.85rem);
+      color: #9A6040; margin-bottom: 22px; font-style: italic;
+    }
 
     /* ── WHY US ── */
     #why { background: var(--warm-white); }
     .why-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(190px, 45%), 1fr));
-      gap: clamp(14px, 3vw, 28px);
-      max-width: 900px; margin: 0 auto;
+      gap: clamp(14px, 3vw, 28px); max-width: 900px; margin: 0 auto;
     }
     .why-card {
       text-align: center; padding: clamp(22px, 4.5vw, 36px) clamp(14px, 3vw, 24px);
@@ -254,8 +277,7 @@
     .gallery-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(min(130px, 30%), 1fr));
-      gap: clamp(8px, 2vw, 16px);
-      max-width: 1000px; margin: 0 auto;
+      gap: clamp(8px, 2vw, 16px); max-width: 1000px; margin: 0 auto;
     }
     .gallery-item {
       border-radius: 16px; aspect-ratio: 1/1;
@@ -272,30 +294,88 @@
     .gallery-item:nth-child(6) { background: linear-gradient(135deg, #f7b7a3, #e07050); }
     .gallery-item:hover { transform: scale(1.06); box-shadow: 0 12px 32px rgba(244,124,32,0.25); }
 
+    /* ── ORDER SECTION ── */
+    #order { background: var(--warm-white); }
+    .order-box {
+      max-width: 680px; margin: 0 auto;
+      background: #fff; border-radius: 24px;
+      padding: clamp(24px, 5vw, 44px);
+      box-shadow: 0 8px 40px rgba(122,27,42,0.1);
+      border: 1.5px solid rgba(244,124,32,0.2);
+    }
+    .order-selected-list {
+      min-height: 42px;
+      background: var(--cream); border-radius: 12px;
+      padding: 12px 16px; margin-bottom: 16px;
+      font-size: 0.88rem; color: var(--maroon); font-weight: 700;
+      border: 1.5px dashed rgba(244,124,32,0.4);
+      line-height: 1.7;
+    }
+    .order-selected-list.empty {
+      color: #bbb; font-weight: 400; font-style: italic;
+    }
+    .order-label {
+      display: block; font-weight: 800; font-size: 0.88rem;
+      color: var(--maroon); margin-bottom: 7px; margin-top: 16px;
+    }
+    .order-input, .order-textarea {
+      width: 100%; border: 1.5px solid rgba(244,124,32,0.35);
+      border-radius: 12px; padding: 12px 14px;
+      font-family: var(--font-body); font-size: 0.9rem; color: var(--text);
+      background: var(--warm-white); outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .order-input:focus, .order-textarea:focus {
+      border-color: var(--orange);
+      box-shadow: 0 0 0 3px rgba(244,124,32,0.15);
+    }
+    .order-textarea { resize: vertical; min-height: 90px; }
+    .order-row { display: flex; gap: 12px; flex-wrap: wrap; }
+    .order-row > * { flex: 1; min-width: 180px; }
+    .order-send-btn {
+      width: 100%; margin-top: 22px;
+      padding: 16px; font-size: 1.05rem; font-weight: 900;
+      border-radius: 14px; justify-content: center;
+      letter-spacing: 0.5px;
+    }
+    .order-clear {
+      display: inline-block; margin-top: 10px;
+      background: none; border: none; color: #aaa;
+      font-size: 0.8rem; cursor: pointer; text-decoration: underline;
+    }
+
     /* ── CONTACT ── */
     #contact { background: var(--maroon); color: #fff; text-align: center; }
     #contact .section-label { color: var(--gold); }
     #contact .section-title { color: #fff; }
+    .contact-btns { display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; }
     .contact-phone {
-      display: inline-flex; align-items: center; gap: clamp(8px, 2vw, 14px);
+      display: inline-flex; align-items: center; gap: clamp(8px,2vw,14px);
       background: var(--orange); color: #fff;
-      font-size: clamp(1.05rem, 4.5vw, 2rem); font-weight: 900;
-      padding: clamp(14px, 3vw, 20px) clamp(22px, 6vw, 48px);
+      font-size: clamp(1.05rem, 4.5vw, 1.7rem); font-weight: 900;
+      padding: clamp(14px,3vw,18px) clamp(22px,6vw,44px);
       border-radius: 60px; text-decoration: none;
       box-shadow: 0 10px 40px rgba(244,124,32,0.5);
       transition: transform 0.2s, box-shadow 0.2s;
-      letter-spacing: clamp(1px, 0.5vw, 2px);
-      white-space: nowrap; max-width: 90vw;
+      white-space: nowrap;
     }
     .contact-phone:hover { transform: scale(1.04); box-shadow: 0 16px 50px rgba(244,124,32,0.7); }
+    .contact-wa {
+      display: inline-flex; align-items: center; gap: clamp(8px,2vw,14px);
+      background: var(--whatsapp); color: #fff;
+      font-size: clamp(1.05rem, 4.5vw, 1.7rem); font-weight: 900;
+      padding: clamp(14px,3vw,18px) clamp(22px,6vw,44px);
+      border-radius: 60px; text-decoration: none;
+      box-shadow: 0 10px 40px rgba(37,211,102,0.4);
+      transition: transform 0.2s, box-shadow 0.2s;
+      white-space: nowrap;
+    }
+    .contact-wa:hover { transform: scale(1.04); background: var(--whatsapp-dk); }
     .contact-tagline {
       font-size: clamp(0.88rem, 2.5vw, 1.05rem);
       color: rgba(255,255,255,0.65); margin: 24px 0; font-style: italic;
     }
-    .contact-note {
-      margin-top: 24px; font-size: clamp(0.76rem, 1.8vw, 0.85rem);
-      color: rgba(255,255,255,0.4);
-    }
+    .contact-note { margin-top: 24px; font-size: clamp(0.76rem,1.8vw,0.85rem); color: rgba(255,255,255,0.4); }
 
     /* ── FOOTER ── */
     footer {
@@ -305,37 +385,27 @@
     }
     footer span { color: var(--orange); }
 
-    /* ── SCROLL REVEAL ── */
-    .reveal {
-      opacity: 0; transform: translateY(20px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
-    }
+    /* ── REVEAL ── */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity 0.65s ease, transform 0.65s ease; }
     .reveal.visible { opacity: 1; transform: none; }
 
     /* ── RESPONSIVE ── */
-
-    /* ≤ 768 px : tablet / large phone landscape */
     @media (max-width: 768px) {
-      .nav-links  { display: none; }
-      .hamburger  { display: flex; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
     }
-
-    /* ≤ 500 px : phones */
     @media (max-width: 500px) {
-      .hero-cta  { flex-direction: column; align-items: center; }
-      .btn       { width: 100%; max-width: 300px; text-align: center; }
+      .hero-cta { flex-direction: column; align-items: center; }
+      .btn      { width: 100%; max-width: 300px; justify-content: center; }
       .products-grid { grid-template-columns: repeat(2, 1fr); }
-      .why-grid  { grid-template-columns: 1fr; }
-      .gallery-grid { grid-template-columns: repeat(2, 1fr); }
-      .contact-phone { font-size: 1rem; padding: 13px 20px; }
+      .why-grid      { grid-template-columns: 1fr; }
+      .gallery-grid  { grid-template-columns: repeat(2, 1fr); }
+      .contact-btns  { flex-direction: column; align-items: center; }
+      .contact-phone, .contact-wa { width: 100%; max-width: 320px; justify-content: center; }
     }
-
-    /* ≤ 340 px : very narrow */
     @media (max-width: 340px) {
       .products-grid { grid-template-columns: 1fr; }
     }
-
-    /* ≥ 1280 px : large desktop */
     @media (min-width: 1280px) {
       .products-grid { grid-template-columns: repeat(4, 1fr); }
       .why-grid      { grid-template-columns: repeat(4, 1fr); }
@@ -345,11 +415,18 @@
 </head>
 <body>
 
+  <!-- FLOATING WHATSAPP BUTTON -->
+  <a href="#order" class="wa-float" title="Order on WhatsApp" aria-label="Order on WhatsApp">💬</a>
+
   <!-- NAV -->
   <nav>
-    <div class="nav-logo">MST <span>Moren</span></div>
+    <div class="nav-logo">
+      <span class="logo-line1">MST</span>
+      Moren <span class="logo-sweet">Sweet Treat</span>
+    </div>
     <ul class="nav-links" aria-label="Main navigation">
       <li><a href="#products">Menu</a></li>
+      <li><a href="#order">Order</a></li>
       <li><a href="#why">Why Us</a></li>
       <li><a href="#gallery">Gallery</a></li>
       <li><a href="#contact">Contact</a></li>
@@ -362,6 +439,7 @@
   <!-- MOBILE DRAWER -->
   <nav class="mobile-menu" id="mobileMenu" aria-label="Mobile navigation">
     <a href="#products" class="mobile-link">🍽️ Menu</a>
+    <a href="#order"    class="mobile-link">🛒 Place Order</a>
     <a href="#why"      class="mobile-link">💛 Why Us</a>
     <a href="#gallery"  class="mobile-link">📸 Gallery</a>
     <a href="#contact"  class="mobile-link">📞 Contact</a>
@@ -375,7 +453,10 @@
       <p class="hero-tagline">Sweetening Moments, One Treat At A Time</p>
       <div class="hero-cta">
         <a href="#products" class="btn btn-primary">Explore Our Menu</a>
-        <a href="#contact"  class="btn btn-outline">Order Now</a>
+        <a href="#order" class="btn btn-wa">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.524 5.855L0 24l6.336-1.501A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.013-1.373l-.36-.213-3.724.882.898-3.625-.235-.372A9.818 9.818 0 1112 21.818z"/></svg>
+          Order on WhatsApp
+        </a>
       </div>
     </div>
   </section>
@@ -384,47 +465,80 @@
   <section id="products">
     <p class="section-label reveal">What We Offer</p>
     <h2 class="section-title reveal">Our Delicious Menu</h2>
+    <p class="select-hint reveal">👆 Tap any item to add it to your order</p>
     <div class="products-grid">
-      <div class="product-card reveal">
+      <div class="product-card reveal" data-item="Cake" onclick="toggleItem(this)">
         <span class="product-icon">🎂</span>
         <div class="product-name">Cake</div>
         <p class="product-desc">Freshly baked cakes for every occasion — birthdays, celebrations & more.</p>
       </div>
-      <div class="product-card reveal">
+      <div class="product-card reveal" data-item="Pastries" onclick="toggleItem(this)">
         <span class="product-icon">🥐</span>
         <div class="product-name">Pastries</div>
         <p class="product-desc">Flaky, golden pastries filled with savoury goodness that melt in your mouth.</p>
       </div>
-      <div class="product-card reveal">
+      <div class="product-card reveal" data-item="Plantain Chips" onclick="toggleItem(this)">
         <span class="product-icon">🍟</span>
         <div class="product-name">Plantain Chips</div>
         <p class="product-desc">Crispy, golden plantain chips — a perfect crunchy snack anytime.</p>
       </div>
-      <div class="product-card reveal">
+      <div class="product-card reveal" data-item="Chin Chin" onclick="toggleItem(this)">
         <span class="product-icon">🍪</span>
         <div class="product-name">Chin Chin</div>
         <p class="product-desc">Traditional crunchy chin chin made fresh with love and the finest ingredients.</p>
       </div>
-      <div class="product-card reveal">
+      <div class="product-card reveal" data-item="Local Snacks" onclick="toggleItem(this)">
         <span class="product-icon">🫙</span>
         <div class="product-name">Local Snacks</div>
         <p class="product-desc">Authentic local favourites that bring the taste of home to every bite.</p>
       </div>
-      <div class="product-card reveal">
+      <div class="product-card reveal" data-item="Yoghurt" onclick="toggleItem(this)">
         <span class="product-icon">🥛</span>
         <div class="product-name">Yoghurt</div>
         <p class="product-desc">Smooth, creamy yoghurt — refreshing and packed with flavour.</p>
       </div>
-      <div class="product-card reveal">
+      <div class="product-card reveal" data-item="Zobo" onclick="toggleItem(this)">
         <span class="product-icon">🌺</span>
         <div class="product-name">Zobo</div>
         <p class="product-desc">Chilled hibiscus zobo drink — naturally sweet, vibrant and refreshing.</p>
       </div>
-      <div class="product-card reveal">
+      <div class="product-card reveal" data-item="Other / Enquiry" onclick="toggleItem(this)">
         <span class="product-icon">✨</span>
-        <div class="product-name">And Lots More!</div>
+        <div class="product-name">More Items</div>
         <p class="product-desc">New treats added regularly. Call us to find out what's fresh today.</p>
       </div>
+    </div>
+  </section>
+
+  <!-- ORDER -->
+  <section id="order">
+    <p class="section-label reveal">Place Your Order</p>
+    <h2 class="section-title reveal">Order on WhatsApp 💬</h2>
+    <div class="order-box reveal">
+
+      <label class="order-label">🛒 Selected items (tap cards above to add)</label>
+      <div class="order-selected-list empty" id="selectedList">No items selected yet…</div>
+      <button class="order-clear" id="clearBtn" onclick="clearAll()" style="display:none">✕ Clear all</button>
+
+      <label class="order-label" for="extraNote">📝 Additional details / custom requests</label>
+      <textarea class="order-textarea" id="extraNote"
+        placeholder="e.g. 1 birthday cake with 'Happy Birthday John', 2 packs chin chin, delivery to Lekki Phase 1…"></textarea>
+
+      <div class="order-row" style="margin-top:4px;">
+        <div>
+          <label class="order-label" for="customerName">👤 Your name</label>
+          <input class="order-input" type="text" id="customerName" placeholder="Your full name"/>
+        </div>
+        <div>
+          <label class="order-label" for="customerPhone">📱 Your phone number</label>
+          <input class="order-input" type="tel" id="customerPhone" placeholder="e.g. 08012345678"/>
+        </div>
+      </div>
+
+      <button class="btn btn-wa order-send-btn" onclick="sendWhatsApp()">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.524 5.855L0 24l6.336-1.501A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.013-1.373l-.36-.213-3.724.882.898-3.625-.235-.372A9.818 9.818 0 1112 21.818z"/></svg>
+        Send Order via WhatsApp
+      </button>
     </div>
   </section>
 
@@ -473,11 +587,17 @@
   <!-- CONTACT -->
   <section id="contact">
     <p class="section-label reveal">Get In Touch</p>
-    <h2 class="section-title reveal">Place Your Order Today</h2>
-    <p class="contact-tagline reveal">Call us now to place your order or make an enquiry!</p>
-    <a href="tel:09069634630" class="contact-phone reveal">
-      <span>📞</span>&nbsp;09069634630
-    </a>
+    <h2 class="section-title reveal">Reach Us Directly</h2>
+    <p class="contact-tagline reveal">Call or WhatsApp us anytime to place your order!</p>
+    <div class="contact-btns reveal">
+      <a href="tel:09069634630" class="contact-phone">
+        📞 09069634630
+      </a>
+      <a href="https://wa.me/2349069634630" target="_blank" rel="noopener" class="contact-wa">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.524 5.855L0 24l6.336-1.501A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.013-1.373l-.36-.213-3.724.882.898-3.625-.235-.372A9.818 9.818 0 1112 21.818z"/></svg>
+        WhatsApp Us
+      </a>
+    </div>
     <p class="contact-note reveal">Available daily — we'd love to sweeten your moment!</p>
   </section>
 
@@ -487,41 +607,97 @@
   </footer>
 
   <script>
-    /* ── Hamburger / mobile drawer ── */
+    /* ── Selected items state ── */
+    const selectedItems = new Set();
+
+    function toggleItem(card) {
+      const item = card.dataset.item;
+      if (selectedItems.has(item)) {
+        selectedItems.delete(item);
+        card.classList.remove('selected');
+      } else {
+        selectedItems.add(item);
+        card.classList.add('selected');
+      }
+      updateSelectedList();
+    }
+
+    function updateSelectedList() {
+      const listEl  = document.getElementById('selectedList');
+      const clearBtn = document.getElementById('clearBtn');
+      if (selectedItems.size === 0) {
+        listEl.textContent = 'No items selected yet…';
+        listEl.classList.add('empty');
+        clearBtn.style.display = 'none';
+      } else {
+        listEl.innerHTML = [...selectedItems].map(i => `✅ ${i}`).join('<br>');
+        listEl.classList.remove('empty');
+        clearBtn.style.display = 'inline-block';
+      }
+    }
+
+    function clearAll() {
+      selectedItems.clear();
+      document.querySelectorAll('.product-card.selected')
+        .forEach(c => c.classList.remove('selected'));
+      updateSelectedList();
+    }
+
+    /* ── Send order to WhatsApp ── */
+    function sendWhatsApp() {
+      const name  = document.getElementById('customerName').value.trim();
+      const phone = document.getElementById('customerPhone').value.trim();
+      const extra = document.getElementById('extraNote').value.trim();
+
+      const itemsList = [...selectedItems];
+      if (itemsList.length === 0 && !extra) {
+        alert('Please select at least one item or describe your order before sending!');
+        return;
+      }
+
+      let msg = '🌟 *New Order — Moren Sweet Treat* 🌟\n\n';
+      if (name)  msg += `👤 *Name:* ${name}\n`;
+      if (phone) msg += `📱 *Phone:* ${phone}\n`;
+      if (itemsList.length > 0) {
+        msg += `\n🛒 *Items Ordered:*\n`;
+        itemsList.forEach(item => { msg += `  • ${item}\n`; });
+      }
+      if (extra) msg += `\n📝 *Additional Details:*\n${extra}\n`;
+      msg += '\n_Sent via morensweettreat.com_';
+
+      const waNumber = '2349069634630';
+      const url = `https://wa.me/${waNumber}?text=${encodeURIComponent(msg)}`;
+      window.open(url, '_blank');
+    }
+
+    /* ── Hamburger ── */
     const hamburger  = document.getElementById('hamburger');
     const mobileMenu = document.getElementById('mobileMenu');
-
     function closeMenu() {
       mobileMenu.classList.remove('open');
       hamburger.classList.remove('open');
       hamburger.setAttribute('aria-expanded', 'false');
     }
-
     hamburger.addEventListener('click', () => {
       const open = mobileMenu.classList.toggle('open');
       hamburger.classList.toggle('open', open);
       hamburger.setAttribute('aria-expanded', String(open));
     });
-
-    document.querySelectorAll('.mobile-link').forEach(link =>
-      link.addEventListener('click', closeMenu));
-
-    /* Close drawer if user clicks outside */
+    document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMenu));
     document.addEventListener('click', e => {
       if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMenu();
     });
 
     /* ── Scroll reveal ── */
-    const revealEls = document.querySelectorAll('.reveal');
-    const observer  = new IntersectionObserver((entries) => {
+    const obs = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
           setTimeout(() => entry.target.classList.add('visible'), i * 55);
-          observer.unobserve(entry.target);
+          obs.unobserve(entry.target);
         }
       });
     }, { threshold: 0.1 });
-    revealEls.forEach(el => observer.observe(el));
+    document.querySelectorAll('.reveal').forEach(el => obs.observe(el));
   </script>
 </body>
 </html>
