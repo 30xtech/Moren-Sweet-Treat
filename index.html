@@ -105,26 +105,117 @@
     }
     .mobile-menu a:last-child { border-bottom: none; }
 
-    /* ── FLOATING WHATSAPP ── */
+    /* ── FLOATING BUTTONS ── */
     .wa-float {
-      position: fixed; bottom: 22px; right: 22px; z-index: 300;
+      position: fixed; right: 22px; bottom: 92px; z-index: 300;
       background: var(--whatsapp); color: #fff;
       width: 58px; height: 58px; border-radius: 50%;
       display: flex; align-items: center; justify-content: center;
-      font-size: 1.7rem; text-decoration: none;
+      text-decoration: none;
       box-shadow: 0 6px 24px rgba(37,211,102,0.5);
       transition: transform 0.2s, box-shadow 0.2s;
       animation: waBounce 2s ease-in-out infinite;
     }
-    .wa-float:hover {
-      transform: scale(1.12);
-      box-shadow: 0 10px 32px rgba(37,211,102,0.65);
-      animation: none;
+    .wa-float:hover { transform: scale(1.12); animation: none; box-shadow: 0 10px 32px rgba(37,211,102,0.65); }
+    @keyframes waBounce { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-6px)} }
+
+    .ai-float {
+      position: fixed; bottom: 22px; right: 22px; z-index: 300;
+      background: var(--maroon); color: #fff;
+      width: 58px; height: 58px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.6rem; border: none; cursor: pointer;
+      box-shadow: 0 6px 24px rgba(122,27,42,0.45);
+      transition: transform 0.2s, box-shadow 0.2s;
     }
-    @keyframes waBounce {
-      0%,100% { transform: translateY(0); }
-      50%      { transform: translateY(-6px); }
+    .ai-float:hover { transform: scale(1.1); box-shadow: 0 10px 32px rgba(122,27,42,0.55); }
+
+    /* ── AI CHAT WIDGET ── */
+    .ai-chat {
+      position: fixed; bottom: 92px; right: 22px; z-index: 400;
+      width: min(360px, calc(100vw - 44px));
+      background: #fff; border-radius: 20px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.18);
+      display: none; flex-direction: column;
+      border: 1.5px solid rgba(244,124,32,0.2);
+      max-height: 72vh; overflow: hidden;
     }
+    .ai-chat.open { display: flex; animation: chatPop 0.25s ease; }
+    @keyframes chatPop { from{opacity:0;transform:scale(0.92) translateY(10px)} to{opacity:1;transform:none} }
+    /* inner wrapper fills the widget and allows absolute overlay */
+    .ai-chat-inner {
+      display: flex; flex-direction: column;
+      flex: 1; overflow: hidden; position: relative;
+    }
+
+    .ai-chat-header {
+      background: var(--maroon); color: #fff;
+      padding: 12px 14px; display: flex; height: 52px;
+      justify-content: space-between; align-items: center;
+      font-weight: 800; font-size: 0.92rem; flex-shrink: 0; gap: 6px;
+    }
+    .ai-close {
+      background: none; border: none; color: #fff;
+      font-size: 1.1rem; cursor: pointer; padding: 0 2px;
+      line-height: 1; opacity: 0.75; transition: opacity 0.2s; flex-shrink: 0;
+    }
+    .ai-close:hover { opacity: 1; }
+
+    .ai-messages {
+      flex: 1; overflow-y: auto; padding: 14px;
+      display: flex; flex-direction: column; gap: 10px;
+      background: var(--warm-white);
+    }
+    .ai-msg {
+      max-width: 85%; padding: 10px 14px;
+      border-radius: 16px; font-size: 0.88rem; line-height: 1.55;
+      word-break: break-word;
+    }
+    .ai-msg-bot {
+      background: var(--cream); color: var(--text);
+      border-bottom-left-radius: 4px; align-self: flex-start;
+      border: 1px solid rgba(244,124,32,0.2);
+    }
+    .ai-msg-user {
+      background: var(--maroon); color: #fff;
+      border-bottom-right-radius: 4px; align-self: flex-end;
+    }
+    .ai-msg-typing {
+      background: var(--cream); border-bottom-left-radius: 4px;
+      align-self: flex-start; padding: 12px 16px;
+      border: 1px solid rgba(244,124,32,0.2);
+    }
+    .ai-typing-dots { display: flex; gap: 4px; align-items: center; }
+    .ai-typing-dots span {
+      width: 7px; height: 7px; border-radius: 50%;
+      background: var(--orange); display: block;
+      animation: dotBounce 1.2s ease-in-out infinite;
+    }
+    .ai-typing-dots span:nth-child(2) { animation-delay: 0.2s; }
+    .ai-typing-dots span:nth-child(3) { animation-delay: 0.4s; }
+    @keyframes dotBounce { 0%,80%,100%{transform:scale(0.7);opacity:0.5} 40%{transform:scale(1);opacity:1} }
+
+    .ai-input-row {
+      display: flex; gap: 8px; padding: 10px 12px;
+      border-top: 1.5px solid rgba(244,124,32,0.15);
+      background: #fff; flex-shrink: 0; position: relative; z-index: 10;
+    }
+    .ai-input {
+      flex: 1; border: 1.5px solid rgba(244,124,32,0.3);
+      border-radius: 30px; padding: 9px 14px;
+      font-family: var(--font-body); font-size: 0.88rem;
+      outline: none; background: var(--warm-white); color: var(--text);
+      transition: border-color 0.2s;
+    }
+    .ai-input:focus { border-color: var(--orange); }
+    .ai-send {
+      background: var(--orange); color: #fff; border: none;
+      border-radius: 50%; width: 42px; height: 42px; min-width: 42px;
+      font-size: 1rem; font-weight: 800; cursor: pointer; flex-shrink: 0;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .ai-send:hover { background: var(--orange-dark); transform: scale(1.08); }
 
     /* ── HERO ── */
     .hero {
@@ -469,12 +560,89 @@
       .why-grid      { grid-template-columns: repeat(4, 1fr); }
       .gallery-grid  { grid-template-columns: repeat(6, 1fr); }
     }
+
+    /* ── AI HEADER BUTTONS ── */
+    .ai-back {
+      background: rgba(255,255,255,0.15); border: none; color: #fff;
+      font-size: 1.4rem; font-weight: 900; cursor: pointer;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; flex-shrink: 0; line-height: 1;
+      padding-bottom: 2px;
+    }
+    .ai-back:hover { background: rgba(255,255,255,0.28); }
+    .ai-menu-btn {
+      background: rgba(255,255,255,0.15); border: none; color: #fff;
+      font-size: 1rem; cursor: pointer;
+      width: 32px; height: 32px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.2s; flex-shrink: 0;
+    }
+    .ai-menu-btn:hover, .ai-menu-btn.active { background: rgba(255,255,255,0.3); }
+
+    /* ── AI MENU DROPDOWN ── */
+    .ai-menu-dropdown {
+      display: none;
+      position: absolute; top: 52px; left: 0; right: 0; bottom: 0; z-index: 20;
+      flex-direction: column;
+      background: #fff;
+      overflow-y: auto;
+    }
+    .ai-menu-dropdown.open { display: flex; }
+    .ai-menu-dropdown button {
+      background: none; border: none; text-align: left;
+      padding: 16px 20px; font-family: var(--font-body);
+      font-size: 0.95rem; font-weight: 700; color: var(--maroon);
+      cursor: pointer; border-bottom: 1px solid rgba(244,124,32,0.1);
+      transition: background 0.15s; width: 100%; flex-shrink: 0;
+    }
+    .ai-menu-dropdown button:last-child { border-bottom: none; }
+    .ai-menu-dropdown button:hover { background: var(--cream); }
   </style>
 </head>
 <body>
 
-  <!-- FLOATING WHATSAPP BUTTON -->
-  <a href="#order" class="wa-float" title="Order on WhatsApp" aria-label="Order on WhatsApp">💬</a>
+  <!-- FLOATING BUTTONS -->
+  <!-- WhatsApp: opens wa.me directly -->
+  <a href="https://wa.me/2349069634630" target="_blank" rel="noopener" class="wa-float" title="Chat on WhatsApp" aria-label="Chat on WhatsApp">
+    <svg width="28" height="28" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347z"/><path d="M12 0C5.373 0 0 5.373 0 12c0 2.123.554 4.118 1.524 5.855L0 24l6.336-1.501A11.943 11.943 0 0012 24c6.627 0 12-5.373 12-12S18.627 0 12 0zm0 21.818a9.818 9.818 0 01-5.013-1.373l-.36-.213-3.724.882.898-3.625-.235-.372A9.818 9.818 0 1112 21.818z"/></svg>
+  </a>
+  <!-- AI Assistant toggle -->
+  <button class="ai-float" id="aiToggle" title="Ask our AI assistant" aria-label="AI Assistant">
+    💬
+  </button>
+
+
+  <div class="ai-chat" id="aiChat">
+    <div class="ai-chat-inner">
+    <div class="ai-chat-header">
+      <button class="ai-back" onclick="document.getElementById('aiChat').classList.remove('open')" title="Back">‹</button>
+      <span>💬 Moren Assistant</span>
+      <div style="display:flex;gap:6px;align-items:center">
+        <button class="ai-menu-btn" id="aiMenuBtn" onclick="toggleAiMenu()" title="Menu">☰</button>
+        <button class="ai-close" onclick="document.getElementById('aiChat').classList.remove('open')">✕</button>
+      </div>
+    </div>
+    <!-- Quick menu dropdown -->
+    <div class="ai-menu-dropdown" id="aiMenuDropdown">
+      <button onclick="quickAsk('What products do you have?')">🛍️ View Products</button>
+      <button onclick="quickAsk('How do I place an order?')">🛒 How to Order</button>
+      <button onclick="quickAsk('What are your prices?')">💰 Pricing Info</button>
+      <button onclick="quickAsk('What are your contact details?')">📞 Contact Us</button>
+      <button onclick="quickAsk('What sizes are available?')">📐 Sizes Available</button>
+      <button onclick="quickAsk('Do you do delivery?')">🚚 Delivery Info</button>
+    </div>
+    <div class="ai-messages" id="aiMessages">
+      <div class="ai-msg ai-msg-bot">Hi! 👋 I'm Moren's assistant. Ask me anything about our products, prices, or how to order!</div>
+    </div>
+    <div class="ai-input-row">
+      <input class="ai-input" id="aiInput" type="text" placeholder="Ask a question…" onkeydown="if(event.key==='Enter')sendAI()"/>
+      <button class="ai-send" onclick="sendAI()">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M2 21l21-9L2 3v7l15 2-15 2z"/></svg>
+      </button>
+    </div>
+    </div>
+  </div>
 
   <!-- NAV -->
   <nav>
@@ -979,11 +1147,118 @@
       hamburger.setAttribute('aria-expanded', String(open));
     });
     document.querySelectorAll('.mobile-link').forEach(l => l.addEventListener('click', closeMenu));
+
+    // Single global click handler — closes menu AND chat if clicking outside
     document.addEventListener('click', e => {
       if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) closeMenu();
+      if (!aiChat.contains(e.target) && !aiToggle.contains(e.target)) {
+        aiChat.classList.remove('open');
+      }
     });
 
-    /* ── Scroll reveal ── */
+    /* ── AI Assistant ── */
+    const aiToggle   = document.getElementById('aiToggle');
+    const aiChat     = document.getElementById('aiChat');
+    const aiMessages = document.getElementById('aiMessages');
+    const aiInput    = document.getElementById('aiInput');
+
+    aiToggle.addEventListener('click', (e) => {
+      e.stopPropagation();
+      aiChat.classList.toggle('open');
+      if (aiChat.classList.contains('open')) aiInput.focus();
+    });
+
+    const SYSTEM_PROMPT = `You are a friendly, helpful customer assistant for Moren Sweet Treat, a Nigerian snack and treat business.
+
+Products available:
+- Cake (Birthday, Chocolate, Vanilla, Red Velvet, Carrot, Fruit Cake) — Sizes: Medium, Large, Extra Large
+- Pastries (Meat Pie, Fish Pie, Egg Roll, Sausage Roll, Puff Puff, Doughnut) — Sizes: Medium, Large, Extra Large
+- Plantain Chips (Plain/Salted, Spicy, Sweet, Honey Glazed, Thin & Crispy, Thick Cut) — Sizes: Medium, Large, Extra Large
+- Chin Chin (Classic, Coconut, Peanut, Chocolate, Spicy, Baked) — Sizes: Medium, Large, Extra Large
+- Local Snacks (Roasted Groundnut, Kuli Kuli, Donkwa, Kokoro, Gurudi, Aadun) — Sizes: Medium, Large, Extra Large
+- Yoghurt (Plain, Strawberry, Vanilla, Mango, Mixed Berry, Pineapple) — Sizes: Medium, Large, Extra Large
+- Zobo drink (Classic, Ginger & Cloves, Pineapple, Zobo + Cucumber) — Sizes: Medium, Large, Extra Large
+
+Contact: 09069634630 | WhatsApp: +2349069634630
+Website: https://morensweettreat.github.io/
+Tagline: "Sweetening Moments, One Treat At A Time"
+
+Keep replies short, warm, and helpful. If asked about pricing, say prices vary and suggest they WhatsApp or call for current prices. Encourage customers to use the order form on the website or WhatsApp directly. Always respond in a friendly, Nigerian-friendly tone.`;
+
+    const chatHistory = [];
+
+    async function sendAI() {
+      const text = aiInput.value.trim();
+      if (!text) return;
+
+      // Show user message
+      addMsg(text, 'user');
+      aiInput.value = '';
+
+      // Show typing indicator
+      const typingEl = document.createElement('div');
+      typingEl.className = 'ai-msg ai-msg-typing';
+      typingEl.innerHTML = '<div class="ai-typing-dots"><span></span><span></span><span></span></div>';
+      aiMessages.appendChild(typingEl);
+      aiMessages.scrollTop = aiMessages.scrollHeight;
+
+      chatHistory.push({ role: 'user', content: text });
+
+      try {
+        const res = await fetch('https://api.anthropic.com/v1/messages', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            model: 'claude-sonnet-4-20250514',
+            max_tokens: 1000,
+            system: SYSTEM_PROMPT,
+            messages: chatHistory
+          })
+        });
+        const data = await res.json();
+        const reply = data.content?.[0]?.text || "Sorry, I couldn't get a response. Please try again!";
+        chatHistory.push({ role: 'assistant', content: reply });
+        typingEl.remove();
+        addMsg(reply, 'bot');
+      } catch (err) {
+        typingEl.remove();
+        addMsg("Oops! Something went wrong. Please try WhatsApp or call us directly on 09069634630 😊", 'bot');
+      }
+    }
+
+    function formatMsg(text) {
+      // Strip markdown: **bold**, *italic*, - lists → clean plain text
+      return text
+        .replace(/\*\*(.*?)\*\*/g, '$1')
+        .replace(/\*(.*?)\*/g, '$1')
+        .replace(/^[-•]\s+/gm, '• ')
+        .trim();
+    }
+
+    function addMsg(text, type) {
+      const el = document.createElement('div');
+      el.className = `ai-msg ai-msg-${type}`;
+      el.textContent = type === 'bot' ? formatMsg(text) : text;
+      aiMessages.appendChild(el);
+      aiMessages.scrollTop = aiMessages.scrollHeight;
+    }
+
+    function toggleAiMenu() {
+      const menu = document.getElementById('aiMenuDropdown');
+      const btn  = document.getElementById('aiMenuBtn');
+      menu.classList.toggle('open');
+      btn.classList.toggle('active');
+    }
+
+    function quickAsk(question) {
+      document.getElementById('aiMenuDropdown').classList.remove('open');
+      document.getElementById('aiMenuBtn').classList.remove('active');
+      document.getElementById('aiInput').value = question;
+      sendAI();
+    }
+
+
+
     const obs = new IntersectionObserver((entries) => {
       entries.forEach((entry, i) => {
         if (entry.isIntersecting) {
