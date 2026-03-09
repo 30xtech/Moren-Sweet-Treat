@@ -596,8 +596,27 @@
       cursor: pointer; border-bottom: 1px solid rgba(244,124,32,0.1);
       transition: background 0.15s; width: 100%; flex-shrink: 0;
     }
-    .ai-menu-dropdown button:last-child { border-bottom: none; }
-    .ai-menu-dropdown button:hover { background: var(--cream); }
+    /* ── QUICK CHIPS ── */
+    .ai-quick-chips {
+      display: flex; flex-wrap: wrap; gap: 8px;
+      padding: 4px 0 6px;
+    }
+    .ai-chips-label {
+      width: 100%; font-size: 0.75rem; color: #aaa;
+      font-weight: 700; margin: 0 0 2px; letter-spacing: 0.3px;
+    }
+    .ai-quick-chips button {
+      background: #fff; border: 1.5px solid rgba(122,27,42,0.25);
+      color: var(--maroon); border-radius: 30px;
+      padding: 7px 13px; font-family: var(--font-body);
+      font-size: 0.8rem; font-weight: 700; cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, transform 0.1s;
+      white-space: nowrap;
+    }
+    .ai-quick-chips button:hover {
+      background: var(--cream); border-color: var(--maroon);
+      transform: scale(1.04);
+    }
   </style>
 </head>
 <body>
@@ -634,6 +653,19 @@
     </div>
     <div class="ai-messages" id="aiMessages">
       <div class="ai-msg ai-msg-bot">Hi! 👋 I'm Moren's assistant. Ask me anything about our products, prices, or how to order!</div>
+      <div class="ai-quick-chips" id="quickChips">
+        <p class="ai-chips-label">Quick questions 👇</p>
+        <button onclick="chipAsk('What products do you have?')">🛍️ View Products</button>
+        <button onclick="chipAsk('How do I place an order?')">🛒 How to Order</button>
+        <button onclick="chipAsk('What are your prices?')">💰 Pricing Info</button>
+        <button onclick="chipAsk('Do you do delivery?')">🚚 Delivery Info</button>
+        <button onclick="chipAsk('What sizes are available?')">📐 Sizes Available</button>
+        <button onclick="chipAsk('What are your contact details?')">📞 Contact Us</button>
+        <button onclick="chipAsk('What cake flavours do you have?')">🎂 Cake Flavours</button>
+        <button onclick="chipAsk('What chin chin flavours do you have?')">🍪 Chin Chin</button>
+        <button onclick="chipAsk('What zobo flavours do you have?')">🌺 Zobo Flavours</button>
+        <button onclick="chipAsk('What pastries do you sell?')">🥐 Pastries</button>
+      </div>
     </div>
     <div class="ai-input-row">
       <input class="ai-input" id="aiInput" type="text" placeholder="Ask a question…" onkeydown="if(event.key==='Enter')sendAI()"/>
@@ -1204,26 +1236,78 @@ Keep replies short, warm, and helpful. If asked about pricing, say prices vary a
 
       chatHistory.push({ role: 'user', content: text });
 
-      try {
-        const res = await fetch('https://api.anthropic.com/v1/messages', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({
-            model: 'claude-sonnet-4-20250514',
-            max_tokens: 1000,
-            system: SYSTEM_PROMPT,
-            messages: chatHistory
-          })
-        });
-        const data = await res.json();
-        const reply = data.content?.[0]?.text || "Sorry, I couldn't get a response. Please try again!";
+      // Smart rule-based responses — works on any browser, no API key needed
+      setTimeout(() => {
+        typingEl.remove();
+        const reply = getMorenReply(text.toLowerCase());
         chatHistory.push({ role: 'assistant', content: reply });
-        typingEl.remove();
         addMsg(reply, 'bot');
-      } catch (err) {
-        typingEl.remove();
-        addMsg("Oops! Something went wrong. Please try WhatsApp or call us directly on 09069634630 😊", 'bot');
-      }
+      }, 800 + Math.random() * 600);
+    }
+
+    function getMorenReply(q) {
+      // Products
+      if (/product|menu|sell|offer|have|item|food|snack|treat/i.test(q))
+        return "We offer 8 delicious categories:\n🎂 Cake\n🥐 Pastries\n🍟 Plantain Chips\n🍪 Chin Chin\n🫙 Local Snacks\n🥛 Yoghurt\n🌺 Zobo\n✨ More Items\n\nEach comes in Medium, Large & Extra Large sizes! Tap any item on the menu to add it to your order.";
+
+      // Cake
+      if (/cake/i.test(q))
+        return "🎂 Our cakes come in: Birthday Cake, Chocolate, Vanilla, Red Velvet, Carrot Cake & Fruit Cake — available in Medium, Large & Extra Large. Perfect for celebrations! 🎉";
+
+      // Pastries
+      if (/pastry|pastries|meat pie|fish pie|puff puff|egg roll|sausage|doughnut/i.test(q))
+        return "🥐 Our pastries include: Meat Pie, Fish Pie, Egg Roll, Sausage Roll, Puff Puff & Doughnut — freshly made and delicious! Available in Medium, Large & Extra Large.";
+
+      // Chin chin
+      if (/chin/i.test(q))
+        return "🍪 Our Chin Chin flavours: Classic/Plain, Coconut, Peanut, Chocolate, Spicy & Baked. Crunchy and made fresh! Available in Medium, Large & Extra Large.";
+
+      // Plantain
+      if (/plantain/i.test(q))
+        return "🍟 Plantain Chips varieties: Plain/Salted, Spicy, Sweet, Honey Glazed, Thin & Crispy, and Thick Cut. The perfect crunchy snack! Available in Medium, Large & Extra Large.";
+
+      // Zobo
+      if (/zobo|hibiscus/i.test(q))
+        return "🌺 Our Zobo flavours: Classic Zobo, Ginger & Cloves, Pineapple Zobo & Zobo + Cucumber. Naturally sweet and refreshing! Available in Medium, Large & Extra Large.";
+
+      // Yoghurt
+      if (/yoghurt|yogurt/i.test(q))
+        return "🥛 Yoghurt flavours: Plain/Natural, Strawberry, Vanilla, Mango, Mixed Berry & Pineapple. Smooth and creamy! Available in Medium, Large & Extra Large.";
+
+      // Local snacks
+      if (/local|snack|groundnut|kuli|donkwa|kokoro|gurudi|aadun/i.test(q))
+        return "🫙 Local Snacks: Roasted Groundnut, Kuli Kuli, Donkwa, Kokoro, Gurudi & Aadun. Authentic Nigerian favourites! Available in Medium, Large & Extra Large.";
+
+      // Sizes
+      if (/size|medium|large|small|big/i.test(q))
+        return "📐 All our products come in 3 sizes:\n• Medium\n• Large\n• Extra Large\n\nFor exact quantities per size, please WhatsApp us on 09069634630 and we'll be happy to help!";
+
+      // Price
+      if (/price|cost|how much|naira|₦|cheap|expensive/i.test(q))
+        return "💰 Prices vary by product and size. For current prices, please:\n📱 WhatsApp us: +234 906 963 4630\n📞 Call us: 09069634630\n\nWe'll give you the best deal! 😊";
+
+      // Order / how to order
+      if (/order|buy|purchase|how to|get|want/i.test(q))
+        return "🛒 Ordering is easy!\n1️⃣ Scroll to Our Menu\n2️⃣ Tap any product to select it\n3️⃣ Choose your flavour & size\n4️⃣ Set quantity\n5️⃣ Fill in your name & phone\n6️⃣ Tap the WhatsApp button — your order goes straight to us! 🎉";
+
+      // Delivery
+      if (/deliver|shipping|send|bring|location|address|lekki|lagos|abuja|pickup/i.test(q))
+        return "🚚 Yes, we do delivery! Availability and fees depend on your location.\n\nPlease WhatsApp us on 09069634630 with your address and we'll sort it out quickly! 😊";
+
+      // Contact
+      if (/contact|phone|call|number|reach|whatsapp|talk/i.test(q))
+        return "📞 Reach us anytime:\n📱 WhatsApp: +234 906 963 4630\n☎️ Call: 09069634630\n\nWe're always happy to help! 🍬";
+
+      // Greeting
+      if (/^(hi|hello|hey|good morning|good afternoon|good evening|howdy|yo)\b/i.test(q))
+        return "Hi there! 👋 Welcome to Moren Sweet Treat — Sweetening Moments, One Treat At A Time! 🍬\n\nHow can I help you today? You can ask about our products, prices, how to order, or delivery!";
+
+      // Thanks
+      if (/thank|thanks|appreciate/i.test(q))
+        return "You're welcome! 😊 We love serving you. Feel free to ask anything else or place an order anytime! 🍪🎂";
+
+      // Default
+      return "I'm not sure about that, but I'd love to help! 😊\n\nYou can ask me about:\n• Our products & flavours\n• Sizes available\n• How to order\n• Prices\n• Delivery\n• Contact details\n\nOr WhatsApp us directly on 09069634630!";
     }
 
     function formatMsg(text) {
@@ -1238,7 +1322,11 @@ Keep replies short, warm, and helpful. If asked about pricing, say prices vary a
     function addMsg(text, type) {
       const el = document.createElement('div');
       el.className = `ai-msg ai-msg-${type}`;
-      el.textContent = type === 'bot' ? formatMsg(text) : text;
+      if (type === 'bot') {
+        el.innerHTML = formatMsg(text).replace(/\n/g, '<br>');
+      } else {
+        el.textContent = text;
+      }
       aiMessages.appendChild(el);
       aiMessages.scrollTop = aiMessages.scrollHeight;
     }
@@ -1248,6 +1336,14 @@ Keep replies short, warm, and helpful. If asked about pricing, say prices vary a
       const btn  = document.getElementById('aiMenuBtn');
       menu.classList.toggle('open');
       btn.classList.toggle('active');
+    }
+
+    function chipAsk(question) {
+      // Hide chips after first tap so chat stays clean
+      const chips = document.getElementById('quickChips');
+      if (chips) chips.style.display = 'none';
+      document.getElementById('aiInput').value = question;
+      sendAI();
     }
 
     function quickAsk(question) {
